@@ -71,7 +71,32 @@ const updateTask = async (req, res) => {
 
 }
 
+const deleteTask = async (req, res) => {
+    const { _id } = req.body
+
+    if(!_id) {
+        throw new ApiError(400, "id not found")
+    }
+
+    const deletedTask = await Task.findByIdAndDelete( _id )
+
+    if(!deletedTask) {
+        throw new ApiError(400, "task not deleted")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            deletedTask,
+            "task deleted successfully"
+        )
+    )
+}
+
 export { 
     addTask,
-    updateTask
+    updateTask,
+    deleteTask
 }
