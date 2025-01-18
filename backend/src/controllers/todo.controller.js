@@ -6,17 +6,13 @@ const addTask = async (req, res) => {
         try {
             const  { text } = req.body
         
-            if(!text || typeof text !== "string" || text.trim() === "") {
+            if(!text?.trim()) {
                 throw new ApiError(400, "the 'text' field is required and must not be empty")
             }
         
             const newTask = await Task.create({
                 text: text
             })
-        
-            if(!newTask) {
-                throw new ApiError(400, "Failed to add task to the database")
-            }
         
             return res
             .status(200)
