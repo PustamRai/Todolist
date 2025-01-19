@@ -4,7 +4,8 @@ import cors from "cors"
 const app = express();
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
 
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 import taskRouter from "./routes/todo.route.js"
 
 // routes declaration
-app.use("/api/tasks", taskRouter)
+app.use("/api/todo", taskRouter)
 
 
 export { app }

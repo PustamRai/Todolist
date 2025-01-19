@@ -2,6 +2,23 @@ import { Task } from "../models/todo.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 
+const getTasks = async (req, res) => {
+    try {
+        const tasks = await Task.find({})
+            .sort({ createdAt: -1 }) // Sort by newest first
+        
+        return res.status(200).json(
+            new ApiResponse(
+                200,
+                tasks,
+                "Tasks fetched successfully"
+            )
+        )
+    } catch (error) {
+        console.log("Tasks doesnot fetched: ", error);
+    }
+}
+
 const addTask = async (req, res) => {
         try {
             const  { text } = req.body
@@ -92,7 +109,8 @@ const deleteTask = async (req, res) => {
 }
 
 export { 
+    getTasks,
     addTask,
     updateTask,
-    deleteTask
+    deleteTask,
 }
