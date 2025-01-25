@@ -52,12 +52,17 @@ const updateTask = async (req, res) => {
         if(!_id && !text) {
             throw new ApiError(400, "id and text field is required")
         }
+
+        const trimmedText = text.trim()
+        if(!trimmedText) {
+            throw new ApiError(400, "text field must not be empty")
+        }
     
         const updatedTask = await Task.findByIdAndUpdate(
             _id,
             {
                 $set: {
-                    text
+                    text: trimmedText
                 }
             },
             {
@@ -85,10 +90,10 @@ const updateTask = async (req, res) => {
 }
 
 const deleteTask = async (req, res) => {
-    const { _id } = req.body
+    const { _id } = req.params
 
     if(!_id) {
-        throw new ApiError(400, "id not found")
+        throw new ApiError(400, "ID not found")
     }
 
     const deletedTask = await Task.findByIdAndDelete( _id )

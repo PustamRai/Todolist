@@ -11,6 +11,6 @@ const router = Router();
 router.route("/tasks").get(getTasks)
 router.route("/addTask").post(addTask)
 router.route("/updateTask").post(updateTask)
-router.route("/deleteTask").post(deleteTask)
+router.route("/deleteTask/:_id").post(deleteTask)
 
 export default router

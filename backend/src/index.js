@@ -1,12 +1,10 @@
-import dotenv from "dotenv"
+import dotenv, { configDotenv } from "dotenv"
 import { app } from "./app.js"
 import connectDB from "./db/db.js"
 
-dotenv.config({
-    path: "./.env"
-})
+configDotenv();
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 8000;
 
 // when connection is build with "async" with database it returns promises automatically. So, .then and .catch is required to handle the error.
 connectDB()
