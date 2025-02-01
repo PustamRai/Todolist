@@ -100,7 +100,7 @@ function Todo() {
                 )}
                 <form
                     onSubmit={handleSubmit}
-                    className='p-3 bg-black rounded-2xl w-full max-w-md flex items-center gap-2'
+                    className='p-3 bg-black rounded-2xl w-full max-w-xl flex items-center gap-2'
                 >
                     <input
                         type="text"
