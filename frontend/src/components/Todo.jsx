@@ -15,7 +15,6 @@ function Todo() {
             const response = await axiosInstance.get('/tasks');
             const ourTasks = response.data?.data || []; // Use fallback to avoid undefined
             setTasks(ourTasks); // Set tasks safely
-            toast.success("task fetched successfully")
         } catch (error) {
             console.error("Failed to fetch tasks:", error);
             toast.error("Could not fetch tasks")
