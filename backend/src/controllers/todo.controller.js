@@ -47,9 +47,10 @@ const addTask = async (req, res) => {
 
 const updateTask = async (req, res) => {
     try {
-        const { _id, text } = req.body
+        const { id } = req.params
+        const { text } = req.body
     
-        if(!_id && !text) {
+        if(!id || !text) {
             throw new ApiError(400, "id and text field is required")
         }
 
@@ -59,7 +60,7 @@ const updateTask = async (req, res) => {
         }
     
         const updatedTask = await Task.findByIdAndUpdate(
-            _id,
+            id,
             {
                 $set: {
                     text: trimmedText
