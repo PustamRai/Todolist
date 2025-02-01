@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { axiosInstance } from '../api/axiosInstance';
 import { Check, Edit, Trash } from "lucide-react";
+import { toast } from "react-toastify";
+
 
 function Todo() {
     const [tasks, setTasks] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [editingTaskId, setEditingTaskId] = useState(null);
-    const [error, setError] = useState(null);
 
     // Fetch tasks from the backend
     const fetchTasks = async () => {
@@ -14,9 +15,10 @@ function Todo() {
             const response = await axiosInstance.get('/tasks');
             const ourTasks = response.data?.data || []; // Use fallback to avoid undefined
             setTasks(ourTasks); // Set tasks safely
+            toast.success("task fetched successfully")
         } catch (error) {
             console.error("Failed to fetch tasks:", error);
-            setError("Could not fetch tasks. Please try again.");
+            toast.error("Could not fetch tasks")
             setTasks([]);
         }
     };
@@ -31,7 +33,7 @@ function Todo() {
         e.preventDefault();
 
         if (!inputValue.trim()) {
-            setError("Task cannot be empty");
+            toast.error("Task cannot be empty");
             return;
         }
 
@@ -46,6 +48,7 @@ function Todo() {
                 setEditingTaskId(null);
                 setInputValue("");
                 await fetchTasks();
+                toast.success("task updated successfully");
             } else {
                 // add
                 const response = await axiosInstance.post('/addTask', {
@@ -55,10 +58,11 @@ function Todo() {
                 setTasks(oldTasks => [...oldTasks, newTask]);
                 setInputValue("");
                 await fetchTasks();
+                toast.success("task added successfully")
             }
         } catch (error) {
             console.error("Failed to save task: ", error);
-            setError(editingTaskId
+            toast.error(editingTaskId
                 ? "Failed to update task. Please try again."
                 : "Failed to save task. Please try again."
             )
@@ -82,22 +86,22 @@ function Todo() {
         try {
             await axiosInstance.post(`/deleteTask/${taskId}`);
             setTasks(tasks.filter((task) => task._id !== taskId));  // Update the task list
+            toast.success("task deleted successfully")
         } catch (error) {
             console.log("Failed to delete task: ", error);
-            setError("Could not delete task. Please try again.")
+            toast.error("Could not delete task. Please try again.")
         }
     }
 
+    // completed task
+    const handleCompletedTask = () => {
+
+    }
 
     return (
         <div className='min-h-screen pt-20 bg-black'>
             <div className='flex justify-center items-center flex-col text-white'>
-                <h2 className='text-3xl mb-4'>Todolist</h2>
-                {error && (
-                    <div className='text-red-500 mb-4'>
-                        {error}
-                    </div>
-                )}
+                <h2 className='text-3xl font-bold font-serif mb-4'>Todo App</h2>
                 <form
                     onSubmit={handleSubmit}
                     className='p-3 bg-black rounded-2xl w-full max-w-xl flex items-center gap-2'
@@ -150,6 +154,7 @@ function Todo() {
                                     <Check size={35}
                                         color="green"
                                         className='p-2 cursor-pointer hover:bg-green-50 rounded-xl transition-colors'
+                                        onClick={handleCompletedTask}
                                     />
 
                                     <Edit
