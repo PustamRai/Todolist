@@ -114,9 +114,55 @@ const deleteTask = async (req, res) => {
     )
 }
 
+const toggleTaskCompletion = async (req, res) => {
+    try {
+        const { _id } = req.params;
+    
+        if(!_id) {
+            throw new ApiError("Id not found for task completion");
+        }
+    
+        // Find the task and get its current completion status
+        const task = await Task.findById(_id)
+    
+        if(!task) {
+            throw new ApiError("task not found for task completion");
+        }
+    
+        const updateTask = await Task.findByIdAndUpdate(
+            _id,
+            {
+                $set: {
+                    completedTask: !task.completedTask
+                }
+            },
+            {
+                new: true
+            }
+        )
+    
+        if(!updateTask) {
+            throw new ApiError("task completion not updated");
+        }
+
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updateTask,
+                `Task mark as ${updateTask.completedTask ? "completed" : "incomplete"}`
+            )
+        )
+    } catch (error) {
+        throw new ApiError(400, "Error updating task completion status: ", error);
+    }
+}
+
 export { 
     getTasks,
     addTask,
     updateTask,
     deleteTask,
+    toggleTaskCompletion
 }

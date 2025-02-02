@@ -5,6 +5,10 @@ const textSchema = new Schema(
         text: {
             type: String,
             required: true
+        },
+        completedTask: {
+            type: Boolean,
+            default: false,
         }
     },
     {
