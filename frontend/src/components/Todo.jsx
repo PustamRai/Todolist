@@ -17,7 +17,7 @@ function Todo() {
             const ourTasks = response.data?.data || []; // Use fallback to avoid undefined
 
             // Separate tasks based on completion status
-            setActiveTasks(ourTasks.filter((task) => !task.completedTask)); 
+            setActiveTasks(ourTasks.filter((task) => !task.completedTask));
             setCompletedTasks(ourTasks.filter((task) => task.completedTask))
         } catch (error) {
             console.error("Failed to fetch tasks:", error);
@@ -122,6 +122,7 @@ function Todo() {
             // Add it to completed tasks with the updated status
             setCompletedTasks(prevTasks => [...prevTasks, updatedTask]
             )
+            await fetchTasks();
             toast.success("completed task")
         } catch (error) {
             console.log("Failed to update task completion status: ", error);
@@ -130,35 +131,76 @@ function Todo() {
     }
 
     return (
-        <div className='min-h-screen pt-20 bg-black'>
-            <div className='flex justify-center items-center flex-col text-white'>
-                <h2 className='text-3xl font-bold font-serif mb-4'>Todo App</h2>
+        <div className='min-h-screen bg-black
+            px-4 sm:px-6 md:px-8 lg:px-12 
+            pt-6 sm:pt-10 md:pt-14 lg:pt-20
+        '>
+            <div className='flex justify-center items-center flex-col text-white 
+                w-full 
+                max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
+                mx-auto
+            '>
+                <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold font-serif mb-4'>Todo App</h2>
                 <form
                     onSubmit={handleSubmit}
-                    className='p-3 bg-black rounded-2xl w-full max-w-xl flex items-center gap-2'
-                >
+                    className=' 
+                        p-3 bg-black rounded-2xl w-full 
+                        flex flex-col sm:flex-row 
+                        items-center gap-2
+                '>
                     <input
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder='add your task'
-                        className='w-full p-4 bg-gray-900 border border-gray-700 
-                        focus:border-blue-500 focus:outline-none rounded-xl
-                        transition-all duration-75 ease-in-out'
+                        className='
+                        w-full 
+                        p-3 sm:p-3 md:p-4 
+                        bg-gray-900 
+                        border border-gray-700 
+                        focus:border-blue-500 
+                        focus:outline-none 
+                        rounded-xl 
+                        transition-all 
+                        duration-200 
+                        text-sm sm:text-base
+                    '
                     />
-                    <div className="flex gap-2">
+                    <div className="
+                        flex flex-col sm:flex-row 
+                        w-full sm:w-auto 
+                        gap-3
+                    ">
                         <button
                             type='submit'
-                            className='p-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 whitespace-nowrap'
+                            className='
+                                p-3 md:p-4
+                                bg-blue-500 
+                                text-white 
+                                rounded-xl font-bold
+                                hover:bg-blue-600 
+                                w-full sm:w-auto
+                                transition-colors
+                                text-sm sm:text-base
+                            '
                         >
-                            {editingTaskId ? "Update task" : "Add Task"}
+                            {editingTaskId ? "Update " : "Add "}
                         </button>
 
                         {editingTaskId && (
                             <button
                                 type='button'
                                 onClick={handleCancelEdit}
-                                className='px-4 py-2 bg-gray-500 text-white rounded-xl hover:bg-gray-600 whitespace-nowrap'
+                                className='
+                                    p-3 
+                                    bg-gray-500 
+                                    text-white 
+                                    rounded-xl font-bold
+                                    hover:bg-gray-600 
+                                    w-full sm:w-auto
+                                    transition-colors
+                                    text-sm sm:text-base
+                                '
                             >
                                 Cancel
                             </button>
@@ -168,7 +210,12 @@ function Todo() {
             </div>
 
             {/* active tasks section */}
-            <div className='text-white p-4 max-w-xl mx-auto'>
+            <div className='
+                text-white p-4 
+                w-full 
+                max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
+                mx-auto
+            '>
                 {activeTasks?.length > 0 ? (
                     <ul className="space-y-2">
                         {activeTasks.map((task, index) =>
@@ -183,14 +230,14 @@ function Todo() {
                                 <span>{task.text}</span>
 
                                 <div className='flex justify-center items-center gap-2'>
-                                    <Check size={35}
+                                    <Check size={35} 
                                         color="green"
                                         className='p-2 cursor-pointer hover:bg-green-50 rounded-xl transition-colors'
                                         onClick={() => handleCompletedTask(task._id)}
                                     />
 
                                     <Edit
-                                        size={35}
+                                        size={35} 
                                         color="orange"
                                         className='p-2 cursor-pointer hover:bg-orange-50 rounded-xl transition-colors'
                                         onClick={() => handleEdit(task)}
@@ -211,11 +258,24 @@ function Todo() {
             </div>
 
             {/* completed tasks section */}
-            <div className='my-10 text-white p-4 max-w-xl mx-auto'>
-                <hr />
+            <div className='
+                my-6 sm:my-8 md:my-10 
+                text-white p-4 
+                w-full 
+                max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
+                mx-auto
+            '>
                 {completedTasks?.length > 0 && (
                     <div className="space-y-2">
-                        <h2 className="m-2 text-xl font-bold text-center text-green-500">Completed Tasks</h2>
+                        <hr />
+                        <h2 className="
+                            m-2 
+                            text-lg sm:text-xl md:text-2xl 
+                            font-bold text-center 
+                            text-green-500
+                        ">
+                            Completed Tasks
+                        </h2>
                         {completedTasks.map((task) => (
                             <div
                                 key={task._id}
