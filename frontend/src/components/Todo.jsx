@@ -5,7 +5,8 @@ import { toast } from "react-toastify";
 
 
 function Todo() {
-    const [tasks, setTasks] = useState([]);
+    const [activeTasks, setActiveTasks] = useState([]);
+    const [completedTasks, setCompletedTasks] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [editingTaskId, setEditingTaskId] = useState(null);
 
@@ -14,11 +15,14 @@ function Todo() {
         try {
             const response = await axiosInstance.get('/tasks');
             const ourTasks = response.data?.data || []; // Use fallback to avoid undefined
-            setTasks(ourTasks); // Set tasks safely
+
+            // Separate tasks based on completion status
+            setActiveTasks(ourTasks.filter((task) => !task.completedTask)); 
+            setCompletedTasks(ourTasks.filter((task) => task.completedTask))
         } catch (error) {
             console.error("Failed to fetch tasks:", error);
             toast.error("Could not fetch tasks")
-            setTasks([]);
+            setActiveTasks([]);
         }
     };
 
@@ -54,7 +58,7 @@ function Todo() {
                     text: cleanInput
                 });
                 const newTask = response.data.data;
-                setTasks(oldTasks => [...oldTasks, newTask]);
+                setActiveTasks(oldTasks => [...oldTasks, newTask]);
                 setInputValue("");
                 await fetchTasks();
                 toast.success("task added successfully")
@@ -81,10 +85,22 @@ function Todo() {
     }
 
     // delete a task
-    const handleDelete = async (taskId) => {
+    const handleDelete = async (taskId, isCompleted) => {
         try {
+            // await axiosInstance.post(`/deleteTask/${taskId}`);
+            // setActiveTasks(activeTasks.filter((task) => task._id !== taskId));  // Update the task list
+
             await axiosInstance.post(`/deleteTask/${taskId}`);
-            setTasks(tasks.filter((task) => task._id !== taskId));  // Update the task list
+
+            if (isCompleted) {
+                setCompletedTasks(prevTasks =>
+                    prevTasks.filter(task => task._id !== taskId)
+                )
+            } else {
+                setActiveTasks(prevTasks =>
+                    prevTasks.filter(task => task._id !== taskId)
+                )
+            }
             toast.success("task deleted successfully")
         } catch (error) {
             console.log("Failed to delete task: ", error);
@@ -93,8 +109,24 @@ function Todo() {
     }
 
     // completed task
-    const handleCompletedTask = () => {
+    const handleCompletedTask = async (taskId) => {
+        try {
+            const response = await axiosInstance.post(`/toggleTask/${taskId}`)
+            const updatedTask = response.data.data
 
+            // remove task from active task
+            setActiveTasks(prevTasks =>
+                prevTasks.filter(task => task._id !== taskId)
+            )
+
+            // Add it to completed tasks with the updated status
+            setCompletedTasks(prevTasks => [...prevTasks, updatedTask]
+            )
+            toast.success("completed task")
+        } catch (error) {
+            console.log("Failed to update task completion status: ", error);
+            toast.error("Could not update task status")
+        }
     }
 
     return (
@@ -109,7 +141,7 @@ function Todo() {
                         type="text"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
-                        placeholder='Enter your task'
+                        placeholder='add your task'
                         className='w-full p-4 bg-gray-900 border border-gray-700 
                         focus:border-blue-500 focus:outline-none rounded-xl
                         transition-all duration-75 ease-in-out'
@@ -135,10 +167,11 @@ function Todo() {
                 </form>
             </div>
 
+            {/* active tasks section */}
             <div className='text-white p-4 max-w-xl mx-auto'>
-                {tasks?.length > 0 ? (
+                {activeTasks?.length > 0 ? (
                     <ul className="space-y-2">
-                        {tasks.map((task, index) =>
+                        {activeTasks.map((task, index) =>
                             <li
                                 key={index}
                                 className={`p-4 rounded-xl transition-all duration-100 ease-in flex items-center justify-between
@@ -153,7 +186,7 @@ function Todo() {
                                     <Check size={35}
                                         color="green"
                                         className='p-2 cursor-pointer hover:bg-green-50 rounded-xl transition-colors'
-                                        onClick={handleCompletedTask}
+                                        onClick={() => handleCompletedTask(task._id)}
                                     />
 
                                     <Edit
@@ -166,7 +199,7 @@ function Todo() {
                                         size={35}
                                         color="red"
                                         className='p-2 cursor-pointer hover:bg-red-50 rounded-xl transition-colors'
-                                        onClick={() => handleDelete(task._id)}
+                                        onClick={() => handleDelete(task._id, false)}
                                     />
                                 </div>
                             </li>
@@ -174,6 +207,32 @@ function Todo() {
                     </ul>
                 ) : (
                     <p className="text-center text-gray-400">No tasks yet. Add one!</p>
+                )}
+            </div>
+
+            {/* completed tasks section */}
+            <div className='my-10 text-white p-4 max-w-xl mx-auto'>
+                <hr />
+                {completedTasks?.length > 0 && (
+                    <div className="space-y-2">
+                        <h2 className="m-2 text-xl font-bold text-center text-green-500">Completed Tasks</h2>
+                        {completedTasks.map((task) => (
+                            <div
+                                key={task._id}
+                                className="p-4 rounded-xl bg-gray-800 flex items-center justify-between opacity-60"
+                            >
+                                <span>{task.text}</span>
+                                <div className="flex justify-center items-center">
+                                    <Trash
+                                        size={35}
+                                        color="red"
+                                        className="p-2 cursor-pointer hover:bg-red-50 rounded-xl transition-colors"
+                                        onClick={() => handleDelete(task._id, true)}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 )}
             </div>
         </div>
