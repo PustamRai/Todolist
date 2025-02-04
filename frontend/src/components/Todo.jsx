@@ -4,13 +4,11 @@ import { Check, Edit, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 
-
 function Todo() {
     const [activeTasks, setActiveTasks] = useState([]);
     const [completedTasks, setCompletedTasks] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [editingTaskId, setEditingTaskId] = useState(null);
-
     const navigate = useNavigate();
 
     // Fetch tasks from the backend
@@ -314,7 +312,7 @@ function Todo() {
                         text-sm sm:text-base'
                     onClick={() => navigate("/activeTasks")}
                 >
-                    Active button
+                    Active Task
                 </button>
 
                 <button
@@ -329,7 +327,7 @@ function Todo() {
                         text-sm sm:text-base'
                     onClick={() => navigate("/completedTasks")}
                 >
-                    Complete button
+                    Completed Task
                 </button>
             </div>
         </div>
