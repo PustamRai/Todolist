@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { axiosInstance } from '../api/axiosInstance';
 import { Check, Edit, Trash } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 
 function Todo() {
@@ -9,6 +10,10 @@ function Todo() {
     const [completedTasks, setCompletedTasks] = useState([]);
     const [inputValue, setInputValue] = useState("");
     const [editingTaskId, setEditingTaskId] = useState(null);
+
+    const navigate = useNavigate();
+
+    // const navigate = useNavigate();
 
     // Fetch tasks from the backend
     const fetchTasks = async () => {
@@ -131,9 +136,10 @@ function Todo() {
     }
 
     return (
-        <div className='min-h-screen bg-black
+        <div className='h-screen bg-black
             px-4 sm:px-6 md:px-8 lg:px-12 
             pt-6 sm:pt-10 md:pt-14 lg:pt-20
+            relaive overflow-auto
         '>
             <div className='flex justify-center items-center flex-col text-white 
                 w-full 
@@ -230,14 +236,14 @@ function Todo() {
                                 <span>{task.text}</span>
 
                                 <div className='flex justify-center items-center gap-2'>
-                                    <Check size={35} 
+                                    <Check size={35}
                                         color="green"
                                         className='p-2 cursor-pointer hover:bg-green-50 rounded-xl transition-colors'
                                         onClick={() => handleCompletedTask(task._id)}
                                     />
 
                                     <Edit
-                                        size={35} 
+                                        size={35}
                                         color="orange"
                                         className='p-2 cursor-pointer hover:bg-orange-50 rounded-xl transition-colors'
                                         onClick={() => handleEdit(task)}
@@ -263,7 +269,7 @@ function Todo() {
                 text-white p-4 
                 w-full 
                 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl 
-                mx-auto
+                mx-auto 
             '>
                 {completedTasks?.length > 0 && (
                     <div className="space-y-2">
@@ -295,8 +301,40 @@ function Todo() {
                     </div>
                 )}
             </div>
+
+            <div className='p-4 rounded-xl flex justify-center items-center gap-3 absolute bottom-0 left-0 right-0 
+            '>
+                <button
+                    className='
+                        p-3 
+                        bg-orange-500 
+                        text-white 
+                        rounded-xl font-bold
+                        hover:bg-orange-400 
+                        w-full sm:w-auto
+                        transition-colors
+                        text-sm sm:text-base'
+                    onClick={() => navigate("/activeTasks")}
+                >
+                    Active button
+                </button>
+
+                <button
+                    className='
+                        p-3 
+                        bg-orange-500 
+                        text-white 
+                        rounded-xl font-bold
+                        hover:bg-orange-400 
+                        w-full sm:w-auto
+                        transition-colors
+                        text-sm sm:text-base'
+                >
+                    Complete button
+                </button>
+            </div>
         </div>
-    );
+    ); 1
 }
 
 export default Todo
