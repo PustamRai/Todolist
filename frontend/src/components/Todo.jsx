@@ -13,8 +13,6 @@ function Todo() {
 
     const navigate = useNavigate();
 
-    // const navigate = useNavigate();
-
     // Fetch tasks from the backend
     const fetchTasks = async () => {
         try {
@@ -329,6 +327,7 @@ function Todo() {
                         w-full sm:w-auto
                         transition-colors
                         text-sm sm:text-base'
+                    onClick={() => navigate("/completedTasks")}
                 >
                     Complete button
                 </button>

@@ -8,7 +8,7 @@ function ActiveTaskButton() {
     const [activeTasks, setActiveTasks] = useState([]);
     const navigate = useNavigate();
 
-    const fetchActiveTasks = async () => {
+    const fetchTasks = async () => {
         try {
             const response = await axiosInstance.get('/tasks');
             const tasks = response.data?.data || [];
@@ -21,7 +21,7 @@ function ActiveTaskButton() {
     };
 
     useEffect(() => {
-        fetchActiveTasks();
+        fetchTasks();
     }, []);
 
     const handleDelete = async (taskId) => {
