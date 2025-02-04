@@ -182,7 +182,7 @@ function Todo() {
                                 bg-blue-500 
                                 text-white 
                                 rounded-xl font-bold
-                                hover:bg-blue-600 
+                                hover:bg-blue-700 
                                 w-full sm:w-auto
                                 transition-colors
                                 text-sm sm:text-base
@@ -225,7 +225,7 @@ function Todo() {
                         {activeTasks.map((task, index) =>
                             <li
                                 key={index}
-                                className={`p-4 rounded-xl transition-all duration-100 ease-in flex items-center justify-between
+                                className={`p-4 rounded-xl hover:bg-gray-700 transition-all duration-100 ease-in flex items-center justify-between
                                     ${editingTaskId === task._id
                                         ? 'bg-gray-700 border-2 border-yellow-500'
                                         : 'bg-gray-800'
@@ -281,9 +281,9 @@ function Todo() {
                             Completed Tasks
                         </h2>
                         {completedTasks.map((task) => (
-                            <div
+                            <li
                                 key={task._id}
-                                className="p-4 rounded-xl bg-gray-800 flex items-center justify-between opacity-60"
+                                className="p-4 rounded-xl bg-gray-800 hover:bg-gray-700 transition-all duration-100 ease-in flex items-center justify-between opacity-60"
                             >
                                 <span>{task.text}</span>
                                 <div className="flex justify-center items-center">
@@ -294,7 +294,7 @@ function Todo() {
                                         onClick={() => handleDelete(task._id, true)}
                                     />
                                 </div>
-                            </div>
+                            </li>
                         ))}
                     </div>
                 )}
