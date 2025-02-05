@@ -64,7 +64,7 @@ function ActiveTaskButton() {
                         {activeTasks.map((task) => (
                             <li
                                 key={task._id}
-                                className='p-4 rounded-xl bg-gray-800 flex items-center justify-between'
+                                className='p-4 rounded-xl bg-gray-800 flex items-center justify-between hover:bg-gray-700 transition-all duration-100 ease-in'
                             >
                                 <span>{task.text}</span>
                                 <div className='flex justify-center items-center gap-2'>
