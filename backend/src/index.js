@@ -8,12 +8,18 @@ dotenv.config({
 
 const PORT = process.env.PORT || 8001;
 
+app.get("/", (req, res) => {
+    res.send("todo app");
+});
+
 // when connection is build with "async" with database it returns promises automatically. So, .then and .catch is required to handle the error.
 connectDB()
 .then(() => {
-        console.log("MongoDB connected successfully");
+    app.listen(PORT, () => {
+        console.log(`server is listening at PORT ${PORT}`)
     })
-    .catch((err) => {
+})
+.catch((err) => {
         console.error("MongoDB connection failed!!", err);
 });
 
